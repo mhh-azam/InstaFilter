@@ -14,6 +14,7 @@ struct ContentView: View {
 
     @State private var image: Image?
     @State private var inputImage: UIImage?
+    @State private var processedImage: UIImage?
     @State private var showImagepicker = false
     @State private var filterIntensity = 0.0
 
@@ -54,9 +55,7 @@ struct ContentView: View {
 
                     Spacer()
 
-                    Button("Save") {
-                        //TODO: save selected image
-                    }
+                    Button("Save", action: save)
                 }
             }
             .padding([.horizontal, .bottom])
@@ -83,7 +82,23 @@ struct ContentView: View {
         if let cgimage = context.createCGImage(outputImage, from: outputImage.extent) {
             let uiImage = UIImage(cgImage: cgimage)
             image = Image(uiImage: uiImage)
+            processedImage = uiImage
         }
+    }
+
+    func save() {
+        guard let processedImage = processedImage else { return }
+        let imageSaver = ImageSaver()
+
+        imageSaver.successHandler = {
+            print("Success!")
+        }
+
+        imageSaver.errorHandler = {
+            print("Oops: \($0.localizedDescription)")
+        }
+
+        imageSaver.writeToPhotoAlbum(image: processedImage)
     }
 }
 

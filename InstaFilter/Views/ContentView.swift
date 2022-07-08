@@ -10,6 +10,8 @@ import SwiftUI
 struct ContentView: View {
 
     @State private var image: Image?
+    @State private var inputImage: UIImage?
+    @State private var showImagepicker = false
     @State private var filterIntensity = 0.0
 
     var body: some View {
@@ -28,7 +30,7 @@ struct ContentView: View {
                         .scaledToFit()
                 }
                 .onTapGesture {
-                    //TODO: Show imagepicker to select image
+                    showImagepicker = true
                 }
 
                 HStack {
@@ -50,8 +52,18 @@ struct ContentView: View {
             }
             .padding([.horizontal, .bottom])
             .navigationTitle("InstaFilter")
-
+            .sheet(isPresented: $showImagepicker) {
+                ImagePicker(image: $inputImage)
+            }
+            .onChange(of: inputImage) { _ in
+                loadImage()
+            }
         }
+    }
+
+    func loadImage() {
+        guard let inputImage = inputImage else { return }
+        image = Image(uiImage: inputImage)
     }
 }
 

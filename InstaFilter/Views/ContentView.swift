@@ -5,7 +5,10 @@
 //  Created by QBUser on 08/07/22.
 //
 
+import CoreImage
+import CoreImage.CIFilterBuiltins
 import SwiftUI
+
 
 struct ContentView: View {
 
@@ -13,6 +16,9 @@ struct ContentView: View {
     @State private var inputImage: UIImage?
     @State private var showImagepicker = false
     @State private var filterIntensity = 0.0
+
+    @State private var currentFilter = CIFilter.sepiaTone()
+    let context = CIContext()
 
     var body: some View {
         NavigationView {
@@ -36,6 +42,9 @@ struct ContentView: View {
                 HStack {
                     Text("Filter Intensity")
                     Slider(value: $filterIntensity)
+                        .onChange(of: filterIntensity) { _ in
+                            applyProcessing()
+                        }
                 }
 
                 HStack {
@@ -63,7 +72,18 @@ struct ContentView: View {
 
     func loadImage() {
         guard let inputImage = inputImage else { return }
-        image = Image(uiImage: inputImage)
+        let ciImage = CIImage(image: inputImage)
+        currentFilter.setValue(ciImage, forKey: kCIInputImageKey)
+        applyProcessing()
+    }
+
+    func applyProcessing() {
+        currentFilter.intensity = Float(filterIntensity)
+        guard let outputImage = currentFilter.outputImage else { return }
+        if let cgimage = context.createCGImage(outputImage, from: outputImage.extent) {
+            let uiImage = UIImage(cgImage: cgimage)
+            image = Image(uiImage: uiImage)
+        }
     }
 }
 

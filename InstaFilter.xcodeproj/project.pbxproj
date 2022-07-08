@@ -52,7 +52,7 @@
 			isa = PBXGroup;
 			children = (
 				B5AFC38F2878432F0063DA79 /* InstaFilterApp.swift */,
-				B5AFC3912878432F0063DA79 /* ContentView.swift */,
+				B5AFC39D287846870063DA79 /* Views */,
 				B5AFC393287843300063DA79 /* Assets.xcassets */,
 				B5AFC395287843300063DA79 /* Preview Content */,
 			);
@@ -65,6 +65,14 @@
 				B5AFC396287843300063DA79 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		B5AFC39D287846870063DA79 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				B5AFC3912878432F0063DA79 /* ContentView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

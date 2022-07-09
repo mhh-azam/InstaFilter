@@ -20,6 +20,10 @@ struct ContentView: View {
 
     @State private var showFilterSheet = false
 
+    @State private var showingAlert = false
+    @State private var alertTitle = ""
+    @State private var alertMessage = ""
+
     @State private var currentFilter: CIFilter = CIFilter.sepiaTone()
     let context = CIContext()
 
@@ -78,6 +82,11 @@ struct ContentView: View {
                 Button("Vignette") { setFilter(CIFilter.vignette()) }
                 Button("Cancel", role: .cancel) { }
             }
+            .alert(alertTitle, isPresented: $showingAlert) {
+                Button("Ok") { }
+            } message: {
+                Text(alertMessage)
+            }
         }
     }
 
@@ -120,14 +129,20 @@ struct ContentView: View {
         let imageSaver = ImageSaver()
 
         imageSaver.successHandler = {
-            print("Success!")
+            shwoAlert("Success!", message: "Filtered image saved.")
         }
 
         imageSaver.errorHandler = {
-            print("Oops: \($0.localizedDescription)")
+            shwoAlert("Failed!", message: "Oops: \($0.localizedDescription)")
         }
 
         imageSaver.writeToPhotoAlbum(image: processedImage)
+    }
+
+    func shwoAlert(_ title: String, message: String) {
+        alertTitle = title
+        alertMessage = message
+        showingAlert = true
     }
 }
 
